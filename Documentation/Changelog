@@ -1,0 +1,22 @@
+
+CHANGELOG
+
+* 2013/08/14:
+
+    - Flush output to stdout after printing each checksum.
+      Ensures that results are shown as soon as computed.
+
+    - Added '--newline' option.
+
+* 2013/06/24:
+
+    - First public version.
+
+    - Handle KeyboardInterrupt.
+
+* 2013/06/23:
+
+    - Add multi-threading support.
+
+    - Port to Python 3.
+
