@@ -89,7 +89,7 @@ MultiHash has some options that can be used to change the behavior:
 ### Portability
 
 Information and error messages are written to stdout and stderr
-respectively, using the current platform newline format and UTF-8 encoding.
+respectively, using the current platform newline format and encoding.
 
 The output is compatible to that of the coreutils tools and can be checked
 with them (e.g. `md5sum -c`). When using the same `--newline format`, output

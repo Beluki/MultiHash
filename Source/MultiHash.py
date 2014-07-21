@@ -21,12 +21,12 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 # Information and error messages:
 
 def outln(line):
-    """ Write 'line' to stdout, using UTF-8 and platform newline. """
+    """ Write 'line' to stdout, using the platform encoding and newline format. """
     print(line)
 
 
 def errln(line):
-    """ Write 'line' to stderr, using UTF-8 and platform newline. """
+    """ Write 'line' to stderr, using the platform encoding and newline format. """
     print(line, file = sys.stderr)
 
 
