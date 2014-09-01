@@ -25,11 +25,8 @@ $ sha1sum *.iso > sha1sums
 
 ## Installation and usage
 
-To install, just make sure you are using Python 3. MultiHash will use the
-[python-fadvise][] module if it is installed. There are no other dependencies.
-MultiHash is a single Python script that you can put in your PATH.
-
-[python-fadvise]: https://github.com/lamby/python-fadvise
+To install, just make sure you are using Python 3. MultiHash is a single
+Python script with no dependencies that you can put in your PATH.
 
 Using it is pretty simple. One algorithm, one file:
 
@@ -91,14 +88,15 @@ MultiHash has some options that can be used to change the behavior:
 Information and error messages are written to stdout and stderr
 respectively, using the current platform newline format and encoding.
 
-The output is compatible to that of the coreutils tools and can be checked
-with them (e.g. `md5sum -c`). When using the same `--newline format`, output
-should be byte by byte identical between platforms.
+The actual output (the digests) is always written in UTF-8, both when
+writing to stdout or to files. When using the same `--newline format`,
+output should be byte by byte identical between platforms.
 
-MultiHash always reads input in binary mode, prepending an asterisk to the
-filename (like md5sum) on output. It makes no sense to read input as text
-and md5sum defaulting to text has been a source of problems (e.g. on Cygwin
-and Windows) in the past.
+The output is compatible to that of the coreutils tools and can be checked
+with them (e.g. `md5sum -c`). MultiHash always reads input in binary mode,
+prepending an asterisk to the filename (like md5sum) on output. It makes
+no sense to read input as text and md5sum defaulting to text has been a
+source of problems (e.g. on Cygwin and Windows) in the past.
 
 The exit status is 0 on success and 1 on errors. After an error,
 MultiHash skips the current file and proceeds with the next one
@@ -114,7 +112,7 @@ The performance of MultiHash depends on many factors:
 * Whether the operation is IO-bound (slow hard disks, single algorithm)
   or CPU-bound (RAID or SSD, multiple or more complex algorithms).
 
-* Whether the filesystem has fadvise support.
+* Whether there is fadvise support.
 
 * Performance of the IO-scheduler when running multiple threads. In
   particular, Windows is known to dramatically [degrade][] performance

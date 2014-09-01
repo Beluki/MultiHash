@@ -1,6 +1,14 @@
 
 CHANGELOG
 
+* 2014/09/01:
+
+    - Use 'os.posix_fadvise', available since Python 3.3+.
+      MultiHash now has no external dependencies.
+
+    - Prefix program name on errors to stderr.
+      e.g. 'MultiHash.py: error: message...'
+
 * 2014/07/21:
 
     - Revised. Working on Python 3.4.1.

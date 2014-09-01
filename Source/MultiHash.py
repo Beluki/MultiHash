@@ -9,8 +9,9 @@ Calculate multiple checksum digests reading each input file once.
 
 import hashlib
 import os
-import time
+import queue
 import sys
+import time
 
 from queue import Queue
 from threading import Thread
@@ -22,18 +23,18 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 def outln(line):
     """ Write 'line' to stdout, using the platform encoding and newline format. """
-    print(line)
+    print(line, flush = True)
 
 
 def errln(line):
     """ Write 'line' to stderr, using the platform encoding and newline format. """
-    print(line, file = sys.stderr)
+    print('MultiHash.py: error:', line, file = sys.stderr, flush = True)
 
 
 # Use FADVISE when available:
 
 try:
-    from fadvise import posix_fadvise, POSIX_FADV_SEQUENTIAL
+    from os import posix_fadvise, POSIX_FADV_SEQUENTIAL
 
     def fadvise_sequential(descriptor):
         """ Try to advise the kernel to read from 'descriptor' sequentially. """
@@ -95,7 +96,7 @@ def utf8_bytes(string):
 
 
 # For portability, all checksum output is done in bytes
-# to avoid Python automatic newline conversion:
+# to avoid Python default encoding and automatic newline conversion:
 
 BYTES_NEWLINES = {
     'dos'    : b'\r\n',
@@ -138,7 +139,7 @@ class Worker(Thread):
     """
 
     def __init__(self, todo, done):
-        Thread.__init__(self)
+        super().__init__()
         self.todo = todo
         self.done = done
         self.daemon = True
@@ -218,7 +219,7 @@ class ThreadPool(object):
                 break
 
             # give tasks processor time:
-            except:
+            except queue.Empty:
                 time.sleep(0.1)
 
     def poll_completed_tasks(self):
@@ -293,7 +294,7 @@ def run(filepaths, algorithms, threads):
     for task in pool.poll_completed_tasks():
         if task.exception:
             exc_type, exc_obj, exc_trace = task.exception
-            errln(str(exc_obj))
+            errln('{}: unable to read, skipped: {}.'.format(task.filepath, exc_obj))
 
         yield task
 
@@ -307,7 +308,7 @@ def run_stdout(filepaths, algorithms, threads, newline):
             status = 1
         else:
             for digest in task.digests:
-                line = utf8_bytes('%s *%s' % (digest, task.filepath))
+                line = utf8_bytes('{} *{}'.format(digest, task.filepath))
                 binary_stdout_writeline(line, newline)
 
     sys.exit(status)
@@ -325,17 +326,19 @@ def run_files(filepaths, algorithms, threads, newline, targets):
             status = 1
         else:
             for digest, algorithm in zip(task.digests, task.algorithms):
-                line = utf8_bytes('%s *%s' % (digest, task.filepath))
+                line = utf8_bytes('{} *{}'.format(digest, task.filepath))
                 lines[algorithm].append(line)
 
     # write to the target files:
     for algorithm, target in zip(algorithms, targets):
-        if lines[algorithm]:
-            try:
-                binary_file_writelines(target, lines[algorithm], newline)
+        current_lines = lines[algorithm]
 
-            except OSError:
-                errln('error: %s: unable to write, skipped.' % target)
+        if len(current_lines) > 0:
+            try:
+                binary_file_writelines(target, current_lines, newline)
+
+            except OSError as err:
+                errln('{}: unable to write, skipped: {}.'.format(target, err))
                 status = 1
 
     sys.exit(status)
@@ -354,12 +357,12 @@ def main():
     newline = BYTES_NEWLINES[options.newline]
 
     if threads < 1:
-        errln('error: the number of threads must be positive.')
+        errln('the number of threads must be positive.')
         sys.exit(1)
 
     if targets:
         if len(targets) != len(algorithms):
-            errln('error: incorrect number of target files.')
+            errln('incorrect number of target files.')
             sys.exit(1)
 
         run_files(filepaths, algorithms, threads, newline, targets)
