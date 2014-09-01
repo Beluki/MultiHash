@@ -112,7 +112,7 @@ The performance of MultiHash depends on many factors:
 * Whether the operation is IO-bound (slow hard disks, single algorithm)
   or CPU-bound (RAID or SSD, multiple or more complex algorithms).
 
-* Whether there is fadvise support.
+* Whether there is [fadvise][] support.
 
 * Performance of the IO-scheduler when running multiple threads. In
   particular, Windows is known to dramatically [degrade][] performance
@@ -120,6 +120,7 @@ The performance of MultiHash depends on many factors:
 
 * Whether the input files are currently cached. Unlikely on big ISOs.
 
+[fadvise]: https://docs.python.org/3/library/os.html#os.posix_fadvise
 [degrade]: http://stackoverflow.com/questions/9191/how-to-obtain-good-concurrent-read-performance-from-disk
 
 Worst case scenario. A laptop with a very slow disk, a single core,
