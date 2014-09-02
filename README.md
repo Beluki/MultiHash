@@ -25,7 +25,7 @@ $ sha1sum *.iso > sha1sums
 
 ## Installation and usage
 
-To install, just make sure you are using Python 3. MultiHash is a single
+To install, just make sure you are using Python 3.3+. MultiHash is a single
 Python script with no dependencies that you can put in your PATH.
 
 Using it is pretty simple. One algorithm, one file:
@@ -104,7 +104,7 @@ MultiHash skips the current file and proceeds with the next one
 instead of aborting. It can be interrupted with Control + C.
 
 MultiHash is tested on Windows 7 and 8 and on Debian (both x86 and x86-64)
-using Python 3.3+. Python 2.x is not supported.
+using Python 3.3+. Older versions are not supported.
 
 ## Performance
 
@@ -136,9 +136,10 @@ Your mileage may vary.
 
 ## Status
 
-This program is feature-complete and has no known bugs. Unless new issues
-are reported or requests are made I plan no further development on it other
-than maintenance.
+This program is finished!
+
+MultiHash is feature-complete and has no known bugs. Unless issues are reported
+I plan no further development on it other than maintenance.
 
 ## License
 
