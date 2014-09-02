@@ -82,7 +82,7 @@ MultiHash has some options that can be used to change the behavior:
   one by one, calculating all the algorithms for each file. Regardless of
   which thread completes first, results will be printed in the same order
   specified as input. The default is to use a single thread. Use `--threads auto`
-  to start as many threads as cpu cores available.
+  to start as many threads as CPUs available.
 
 ## Portability
 

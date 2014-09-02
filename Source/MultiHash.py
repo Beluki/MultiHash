@@ -274,7 +274,7 @@ def make_parser():
         default = 'system')
 
     parser.add_argument('--threads',
-        help = 'number of threads ("auto" for as many as cpus, default: 1)',
+        help = 'number of threads ("auto" for as many as CPUs, default: 1)',
         default = '1')
 
     return parser
@@ -358,7 +358,12 @@ def main():
 
     # parse --threads option:
     if threads == 'auto':
-        threads = cpu_count()
+        try:
+            threads = cpu_count()
+
+        except NotImplementedError:
+            errln('unable to determine the number of CPUs on this system.')
+            sys.exit(1)
     else:
         try:
             threads = int(threads)
@@ -378,6 +383,7 @@ def main():
             sys.exit(1)
 
         run_files(filepaths, algorithms, threads, newline, targets)
+
     else:
         run_stdout(filepaths, algorithms, threads, newline)
 

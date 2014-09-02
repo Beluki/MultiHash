@@ -4,7 +4,7 @@ CHANGELOG
 * 2014/09/02:
 
     - Added '--threads auto' to use the same number of threads
-      as cpus are available on the current system.
+      as CPUs are available on the current system.
 
 * 2014/09/01:
 
