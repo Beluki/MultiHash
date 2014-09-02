@@ -13,6 +13,7 @@ import queue
 import sys
 import time
 
+from multiprocessing import cpu_count
 from queue import Queue
 from threading import Thread
 
@@ -273,9 +274,8 @@ def make_parser():
         default = 'system')
 
     parser.add_argument('--threads',
-        help = 'number of threads to use',
-        default = 1,
-        type = int)
+        help = 'number of threads ("auto" for as many as cpus, default: 1)',
+        default = '1')
 
     return parser
 
@@ -356,17 +356,28 @@ def main():
     threads = options.threads
     newline = BYTES_NEWLINES[options.newline]
 
-    if threads < 1:
-        errln('the number of threads must be positive.')
-        sys.exit(1)
+    # parse --threads option:
+    if threads == 'auto':
+        threads = cpu_count()
+    else:
+        try:
+            threads = int(threads)
 
+            if threads < 1:
+                errln('the number of threads must be positive.')
+                sys.exit(1)
+
+        except ValueError:
+            errln('--threads must be a positive integer or "auto".')
+            sys.exit(1)
+
+    # run to files or stdout:
     if targets:
         if len(targets) != len(algorithms):
             errln('incorrect number of target files.')
             sys.exit(1)
 
         run_files(filepaths, algorithms, threads, newline, targets)
-
     else:
         run_stdout(filepaths, algorithms, threads, newline)
 

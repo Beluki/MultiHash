@@ -82,6 +82,7 @@ MultiHash has some options that can be used to change the behavior:
   input files, where each thread calculates all the algorithms for one file.
   Regardless of which thread completes first, results will be printed in
   the same order specified as input. The default is to use a single thread.
+  Use `--threads auto` to use as many threads as cpu cores available.
 
 ## Portability
 
@@ -123,66 +124,15 @@ The performance of MultiHash depends on many factors:
 [fadvise]: https://docs.python.org/3/library/os.html#os.posix_fadvise
 [degrade]: http://stackoverflow.com/questions/9191/how-to-obtain-good-concurrent-read-performance-from-disk
 
-Worst case scenario. A laptop with a very slow disk, a single core,
-Windows 32 bit, calculating a single algorithm with one thread:
+In the worst case scenario, the performance is comparable to that
+of the coreutils tools plus Python's startup time.
 
-```bash
-$ time md5sum *.iso
-e44ea9c993ce105ae71c5723f0369b45 *1.iso
-0f031b720f08bb2ec818f0743fdff9c7 *2.iso
-30e0076948fba2777fce9fca3de304ae *3.iso
-e764e45f5fd6c0459af1329572a68318 *4.iso
+In the best cases, specially when calculating multiple algorithms
+like md5sums, sha1sums, sha256sums and sha512sums for a ton of isos
+(like in Debian releases) MultiHash can be many times faster.
+Speedups of 4x or more are common.
 
-real    0m23.520s
-user    0m0.000s
-sys     0m0.000s
-
-$ time MultiHash.py md5 -i *.iso
-e44ea9c993ce105ae71c5723f0369b45 *1.iso
-0f031b720f08bb2ec818f0743fdff9c7 *2.iso
-30e0076948fba2777fce9fca3de304ae *3.iso
-e764e45f5fd6c0459af1329572a68318 *4.iso
-
-real    0m23.570s
-user    0m0.000s
-sys     0m0.000s
-```
-
-Best case scenario. A server with a fast RAID, quad core, Debian Wheezy 64 bit,
-calculating multiple algorithms with multiple threads:
-
-```bash
-$ cat run-coreutils.sh
-#!/bin/sh
-md5sum *.iso > md5.1
-sha1sum *.iso > sha1.1
-sha256sum *.iso > sha256.1
-sha512sum *.iso > sha512.1
-
-$ time ./run-coreutils.sh
-real    4m39.582s
-user    0m0.030s
-sys     0m0.045s
-
-$ time MultiHash.py md5 sha1 sha256 sha512 --threads 4 \
-      -i *.iso -o md5.2 sha1.2 sha256.2 sha512.2
-real    0m40.721s
-user    0m0.000s
-sys     0m0.015s
-```
-
-Ensuring the generated files are identical:
-
-```bash
-$ diff md5.1 md5.2
-$ diff sha1.1 sha1.2
-$ diff sha256.1 sha256.2
-$ diff sha512.1 sha512.2
-```
-
-Your mileage may vary. Both systems were rebooted before running each benchmark
-(both before running the coreutils tools and before running MultiHash) to minimize
-caching impact. Remember, there are Lies, Damn Lies and Benchmarks.
+Your mileage may vary.
 
 ## Status
 
