@@ -75,14 +75,14 @@ MultiHash has some options that can be used to change the behavior:
   If no output files are specified, stdout will be used.
 
 * `--newline [dos, mac, unix, system]` changes the newline format.
-  I tend to use unix newlines everywhere, even on Windows. The default is
+  I tend to use Unix newlines everywhere, even on Windows. The default is
   `system`, which uses the current platform newline format.
 
-* `--threads n` runs n threads in parallel. Threads are spread accross
-  input files, where each thread calculates all the algorithms for one file.
-  Regardless of which thread completes first, results will be printed in
-  the same order specified as input. The default is to use a single thread.
-  Use `--threads auto` to use as many threads as cpu cores available.
+* `--threads n` runs n threads in parallel. Threads consume input files
+  one by one, calculating all the algorithms for each file. Regardless of
+  which thread completes first, results will be printed in the same order
+  specified as input. The default is to use a single thread. Use `--threads auto`
+  to start as many threads as cpu cores available.
 
 ## Portability
 
