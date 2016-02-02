@@ -1,6 +1,11 @@
 
 CHANGELOG
 
+* 2016/02/02:
+
+    - Working on Python 3.5.0.
+      No changes needed.
+
 * 2014/09/02:
 
     - Added '--threads auto' to use the same number of threads

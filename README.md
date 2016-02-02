@@ -146,5 +146,5 @@ I plan no further development on it other than maintenance.
 Like all my hobby projects, this is Free Software. See the [Documentation][] folder
 for more information. No warranty though.
 
-[Documentation]: https://github.com/Beluki/MultiHash/tree/master/Documentation
+[Documentation]: Documentation
 
